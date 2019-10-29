@@ -14,6 +14,15 @@ from baselines.common.tf_util import get_session
 from baselines import logger
 from importlib import import_module
 
+env_dir = '/Users/nrd1012/Projects/cmu/aml/marl/gym-pacman'
+sys.path.insert(1, env_dir)
+import gym_pacman
+
+env_dir = '/Users/nrd1012/Projects/cmu/aml/marl/gym-multiadd'
+sys.path.insert(1, env_dir)
+
+import gym_multi_add
+
 try:
     from mpi4py import MPI
 except ImportError:
@@ -49,6 +58,10 @@ _game_envs['retro'] = {
     'SpaceInvaders-Snes',
 }
 
+_game_envs['custom'] = {
+    'Pacman-RL-v0',
+    'MultiAdd-v0'
+}
 
 def train(args, extra_args):
     env_type, env_id = get_env_type(args)
@@ -221,7 +234,7 @@ def main(args):
 
     if args.play:
         logger.log("Running trained model")
-        obs = env.reset()
+        obs = env.reset(True)
 
         state = model.initial_state if hasattr(model, 'initial_state') else None
         dones = np.zeros((1,))
